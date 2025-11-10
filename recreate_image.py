@@ -55,9 +55,10 @@ df = pd.DataFrame(rows)
 print("\n Dataframe shape: ",df.shape) # (nbr_files,nbr_keys)
 
 # --- Useful functions
-def count_clusters(img, thr):
+def count_clusters(img, thr, connectivity_= CONNECTIVITY, min_size_= MIN_SIZE_CLUSTER):
     mask = img > thr
-    labeled = label(mask, connectivity=CONNECTIVITY)
+    labeled = rmv(mask, min_size=min_size_)
+    labeled = label(mask, connectivity=connectivity_)
     return labeled.max()
 def parse_fname(name):
     fname = os.path.basename(name)
@@ -140,8 +141,8 @@ def plot_image_in_file_histogram(df_img, threshold_val=105,n=1):
     thresh_im = img > threshold_val
     im_display = ax_img.imshow(thresh_im,origin="lower",cmap="gray")
     # --- Counting clusters
-    counts = label(thresh_im, connectivity=CONNECTIVITY)
     counts = rmv(counts, min_size=MIN_SIZE_CLUSTER)
+    counts = label(thresh_im, connectivity=CONNECTIVITY)
 
     ax_img.set_title(f"Thresholded image  (thr={threshold_val}), counts={counts.max()}")
     # --- Initial histogram
@@ -199,7 +200,6 @@ def plot_image_in_file_histogram(df_img, threshold_val=105,n=1):
     slider.on_changed(update)
     plt.show()
     
-
 
 # :: Get images for files with different parameters
 def plot_images_across_files(df_files,n=1):
