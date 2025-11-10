@@ -170,8 +170,8 @@ def plot_image_in_file_histogram(df_img, threshold_val=105,n=1):
         # --- Cluster update
         new_thresh_im = img > threshold_val
         # --- Counting clusters update
-        new_counts = label(new_thresh_im, connectivity=CONNECTIVITY)
         new_counts = rmv(new_counts,min_size=MIN_SIZE_CLUSTER)
+        new_counts = label(new_thresh_im, connectivity=CONNECTIVITY)
         # --- New XY data for imshow
         im_display.set_data(new_thresh_im)
         ax_img.set_title(f"Threshold image(thr={threshold_val}), counts={new_counts.max()}")
